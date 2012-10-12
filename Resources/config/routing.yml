@@ -1,0 +1,12 @@
+arnm_media:
+    pattern:  /araneum/media
+    defaults: { _controller: ArnmMediaBundle:Media:index }
+arnm_media_new:
+    pattern:  /araneum/media/new
+    defaults: { _controller: ArnmMediaBundle:Media:new }
+arnm_media_delete:
+    pattern:  /araneum/media/{id}/delete
+    defaults: { _controller: ArnmMediaBundle:Media:delete }
+_imagine:
+    resource: .
+    type:     imagine

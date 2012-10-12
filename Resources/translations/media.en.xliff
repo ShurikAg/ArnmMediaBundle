@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="media.en.xliff">
+        <body>
+            <trans-unit id="1">
+                <source>media.info</source>
+                <target>This section allows a full control over the media library.</target>
+            </trans-unit>
+            <trans-unit id="2">
+                <source>media.list.title</source>
+                <target>Media</target>
+            </trans-unit>
+            <trans-unit id="3">
+                <source>media.form.media.label</source>
+                <target>Media File</target>
+            </trans-unit>
+            <trans-unit id="4">
+                <source>media.form.media.help</source>
+                <target>Media file to be uploaded. At this point only images are supported.</target>
+            </trans-unit>
+            <trans-unit id="5">
+                <source>media.list.action.create_new</source>
+                <target>Add</target>
+            </trans-unit>
+            <trans-unit id="6">
+                <source>media.list.table.head.name</source>
+                <target>Name</target>
+            </trans-unit>
+            <trans-unit id="7">
+                <source>media.list.table.head.preview</source>
+                <target>Preview</target>
+            </trans-unit>
+            <trans-unit id="8">
+                <source>media.new.info</source>
+                <target>Choose a media file to be uploaded. For now we support images only.</target>
+            </trans-unit>
+            <trans-unit id="9">
+                <source>media.form.title.new</source>
+                <target>Upload new media resource</target>
+            </trans-unit>
+            <trans-unit id="10">
+                <source>media.form.action.upload</source>
+                <target>Upload</target>
+            </trans-unit>
+            <trans-unit id="11">
+                <source>media.form.name.label</source>
+                <target>Name</target>
+            </trans-unit>
+            <trans-unit id="12">
+                <source>media.form.name.help</source>
+                <target>Any name for convenience.</target>
+            </trans-unit>
+            <trans-unit id="13">
+                <source>media.form.tag.label</source>
+                <target>Tag</target>
+            </trans-unit>
+            <trans-unit id="14">
+                <source>media.form.tag.help</source>
+                <target>None required tag that may be used for various purposes.</target>
+            </trans-unit>
+            <trans-unit id="15">
+                <source>media.list.table.head.tag</source>
+                <target>Tag</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

@@ -1,0 +1,24 @@
+{
+    "name": "iibs/arnm-media",
+    "description": "Araneum's media bundle",
+    "version": "1.0.0-beta",
+    "authors": [
+        {
+            "name": "Alex Agulyansky",
+            "email": "alex@iibspro.com",
+            "homepage": "http://www.iibspro.com",
+            "role": "Dev Lead"
+        }
+    ],
+    "autoload": {
+        "psr-0": { "Arnm\\MediaBundle": "" }
+    },
+    "target-dir": "Arnm/MediaBundle",
+    "require": {
+        "php": ">=5.3.3",
+        "symfony/symfony": "2.1.*",
+        "doctrine/orm": ">=2.2.3,<2.4-dev",
+        "iibs/arnm-core": "dev-master",
+        "liip/imagine-bundle": "dev-master"
+    }
+}
