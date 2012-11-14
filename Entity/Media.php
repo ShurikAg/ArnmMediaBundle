@@ -74,6 +74,13 @@ class Media
     private $attributes;
 
     /**
+     * Web dir for been able to upload files.
+     *
+     * @var string
+     */
+    private $webDir;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -227,8 +234,7 @@ class Media
     public function getAttributeValueByName($name)
     {
         $attr = $this->getAttributeByName($name);
-        if($attr instanceof Attribute)
-        {
+        if ($attr instanceof Attribute) {
             return $attr->getValue();
         }
 
@@ -244,7 +250,7 @@ class Media
      */
     public function preUpload()
     {
-        if(null !== $this->media) {
+        if (null !== $this->media) {
             // do whatever you want to generate a unique name
             $this->file = uniqid() . '.' . $this->media->guessExtension();
 
@@ -259,7 +265,7 @@ class Media
      */
     public function upload()
     {
-        if(null === $this->media) {
+        if (null === $this->media) {
             return;
         }
 
@@ -276,7 +282,7 @@ class Media
      */
     public function removeUpload()
     {
-        if($file = $this->getAbsolutePath()) {
+        if ($file = $this->getAbsolutePath()) {
             unlink($file);
         }
     }
@@ -293,8 +299,12 @@ class Media
 
     protected function getUploadRootDir()
     {
+        $webDir = $this->getWebDir();
+        if(empty($webDir)){
+            throw new \RuntimeException("Web directory is not set!");
+        }
         // the absolute directory path where uploaded documents should be saved
-        return __DIR__ . '/../../../../web/' . $this->getUploadDir();
+        return $webDir . $this->getUploadDir();
     }
 
     protected function getUploadDir()
@@ -311,7 +321,7 @@ class Media
     public function getTargetUrl()
     {
         $urlAttr = $this->getAttributeByName('url');
-        if($urlAttr instanceof Attribute){
+        if ($urlAttr instanceof Attribute) {
             return $urlAttr->getValue();
         }
 
@@ -326,7 +336,7 @@ class Media
     public function getCaption()
     {
         $urlAttr = $this->getAttributeByName('caption');
-        if($urlAttr instanceof Attribute){
+        if ($urlAttr instanceof Attribute) {
             return $urlAttr->getValue();
         }
 
@@ -345,11 +355,28 @@ class Media
         $name = (string) $name;
         $attrs = $this->getAttributes();
         foreach ($attrs as $attr) {
-            if($attr->getName() == $name) {
+            if ($attr->getName() == $name) {
                 return $attr;
             }
         }
 
         return null;
     }
+
+    /**
+     * @return string
+     */
+    public function getWebDir()
+    {
+        return $this->webDir;
+    }
+
+    /**
+     * @param string $webDir
+     */
+    public function setWebDir($webDir)
+    {
+        $this->webDir = $webDir;
+    }
+
 }

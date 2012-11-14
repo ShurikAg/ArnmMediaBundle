@@ -32,6 +32,7 @@ class MediaController extends ArnmController
     public function newAction()
     {
         $media = new Media();
+        $media->setWebDir($this->getWebDir());
         $form = $this->createForm(new MediaType(), $media);
 
         if($this->getRequest()->getMethod() === 'POST') {
@@ -61,10 +62,21 @@ class MediaController extends ArnmController
                 throw $this->createNotFoundException('Unable to find Media entity.');
             }
 
+            $media->setWebDir($this->getWebDir());
             $em->remove($media);
             $em->flush();
         }
 
         return $this->redirect($this->generateUrl('arnm_media'));
+    }
+
+    /**
+     * Gets web dir
+     *
+     * @return string
+     */
+    protected function getWebDir()
+    {
+        return $this->get('kernel')->getRootDir().'/../web/';
     }
 }
