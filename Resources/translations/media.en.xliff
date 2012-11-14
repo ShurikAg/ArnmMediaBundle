@@ -62,6 +62,10 @@
                 <source>media.list.table.head.tag</source>
                 <target>Tag</target>
             </trans-unit>
+            <trans-unit id="16">
+                <source>media.list.table.head.img_links</source>
+                <target>Tag</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
