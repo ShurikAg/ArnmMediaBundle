@@ -64,7 +64,7 @@
             </trans-unit>
             <trans-unit id="16">
                 <source>media.list.table.head.img_links</source>
-                <target>Tag</target>
+                <target>Resource Links</target>
             </trans-unit>
         </body>
     </file>
