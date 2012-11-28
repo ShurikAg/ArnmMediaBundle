@@ -1,9 +1,7 @@
 <?php
-
 namespace Arnm\MediaBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
-
 /**
  * MediaRepository
  *
@@ -18,12 +16,16 @@ class MediaRepository extends EntityRepository
      *
      * @return array
      */
-    public function findAllMediaByTag($slidesTag)
+    public function findAllMediaByTag($slidesTag, $limit = null)
     {
-        $query = $this->createQueryBuilder('m')->leftJoin('m.attributes', 'a')
-                    ->where('m.tag = :tag')
-                    ->setParameter('tag', $slidesTag)
-                    ->getQuery();
+        $builder = $this->createQueryBuilder('m')
+            ->leftJoin('m.attributes', 'a')
+            ->where('m.tag = :tag')
+            ->setParameter('tag', $slidesTag);
+        if (! is_null($limit)) {
+            $builder->setMaxResults($limit);
+        }
+        $query = $builder->getQuery();
 
         return $query->getResult();
     }
