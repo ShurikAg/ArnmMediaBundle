@@ -1,6 +1,8 @@
 <?php
 namespace Arnm\MediaBundle\Controller;
 
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+
 use Arnm\CoreBundle\Controllers\ArnmController;
 
 use Arnm\MediaBundle\Form\MediaType;
@@ -25,7 +27,7 @@ class MediaController extends ArnmController
     }
 
     /**
-     * Shows a from for uploading new media resource
+     * Shows a from for updating existing media resource
      *
      * @return Response
      */
@@ -35,9 +37,9 @@ class MediaController extends ArnmController
         $media->setWebDir($this->getWebDir());
         $form = $this->createForm(new MediaType(), $media);
 
-        if($this->getRequest()->getMethod() === 'POST') {
+        if ($this->getRequest()->getMethod() === 'POST') {
             $form->bindRequest($this->getRequest());
-            if($form->isValid()) {
+            if ($form->isValid()) {
                 $em = $this->getDoctrine()->getEntityManager();
 
                 $em->persist($media);
@@ -52,20 +54,62 @@ class MediaController extends ArnmController
         ));
     }
 
+    /**
+     * Shows a from for updating existing media resource
+     *
+     * @param int $id
+     *
+     * @return Response
+     */
+    public function editAction($id)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $media = $em->getRepository('ArnmMediaBundle:Media')->findOneById($id);
+        $media->setWebDir($this->getWebDir());
+        $form = $this->createForm(new MediaType(), $media);
+
+        if ($this->getRequest()->getMethod() === 'POST') {
+            $form->bindRequest($this->getRequest());
+            if ($form->isValid()) {
+                $em = $this->getDoctrine()->getEntityManager();
+
+                if($media->media instanceof UploadedFile){
+                    $media->setUpdated(new \DateTime());
+                }
+
+                $em->persist($media);
+                $em->flush();
+
+                return $this->redirect($this->generateUrl('arnm_media_edit', array('id' => $media->getId())));
+            }
+        }
+        return $this->render('ArnmMediaBundle:Media:edit.html.twig', array(
+            'media' => $media,
+            'form' => $form->createView()
+        ));
+    }
+
+    /**
+     * Deletes Media object
+     *
+     * @param int $id
+     */
     public function deleteAction($id)
     {
-        if($id) {
-            $em = $this->getDoctrine()->getEntityManager();
-            $media = $em->getRepository('ArnmMediaBundle:Media')->findOneById($id);
+        $em = $this->getDoctrine()->getEntityManager();
+        $media = $em->getRepository('ArnmMediaBundle:Media')->findOneById($id);
 
-            if(! $media) {
-                throw $this->createNotFoundException('Unable to find Media entity.');
-            }
-
-            $media->setWebDir($this->getWebDir());
-            $em->remove($media);
-            $em->flush();
+        if (! $media) {
+            throw $this->createNotFoundException('Unable to find Media entity.');
         }
+
+        $media->setWebDir($this->getWebDir());
+
+        foreach ($media->getAttributes() as $attribtue) {
+            $em->remove($attribtue);
+        }
+        $em->remove($media);
+        $em->flush();
 
         return $this->redirect($this->generateUrl('arnm_media'));
     }
@@ -77,6 +121,6 @@ class MediaController extends ArnmController
      */
     protected function getWebDir()
     {
-        return $this->get('kernel')->getRootDir().'/../web/';
+        return $this->get('kernel')->getRootDir() . '/../web/';
     }
 }

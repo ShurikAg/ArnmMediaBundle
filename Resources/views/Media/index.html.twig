@@ -47,6 +47,7 @@
         			<br/>
 	            </td>
 	            <td>
+	            	<a href="{{ path('arnm_media_edit', { 'id': entity.id }) }}" class="btn">{{ 'default.label.edit'|trans }}</a>
 	            	<a href="{{ path('arnm_media_delete', { 'id': entity.id }) }}" class="btn btn-danger delete-confirm">{{ 'default.label.delete'|trans }}</a>
 	            </td>
 	        </tr>

@@ -1,0 +1,35 @@
+{% extends 'ArnmAraneumBundle::araneum.html.twig' %}
+
+{% form_theme form 'ArnmAraneumBundle:Form:araneum.html.twig' %}
+
+{% block sidebar %}
+	<div class="alert alert-info hint">
+		<span class="label label-info">{{ 'default.label.info'|trans }}</span><br/>
+  		{{ 'media.edit.info'|trans({}, 'media')|raw }}
+	</div>
+{% endblock %}
+
+{% block title %}
+	{{ parent() }} | {{ 'media.form.title.edit'|trans({}, 'media') }}
+{% endblock %}
+
+{% block content %}
+	<div class="page-header">
+		<h2>{{ 'media.form.title.edit'|trans({}, 'media') }}</h2>
+	</div>
+	
+	{% include 'ArnmAraneumBundle:Misc:messages.html.twig' %}
+	
+	{% if form %}
+		<form action="{{ path('arnm_media_edit', { 'id': media.id }) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+			<fieldset>
+				{{ form_widget(form) }}
+				<div class="form-actions">
+			    	<input class="btn btn-primary" type="submit" value="{{ 'media.form.action.update'|trans({}, 'media') }}"/>
+			    	<input class="btn" type="reset" value="{{ 'default.form.action.reset'|trans }}"/>
+			    	<a  class="btn" href="{{ path('arnm_media') }}">{{ 'default.form.action.back_to_list'|trans }}</a>
+			    </div>
+		    </fieldset>
+		</form>
+	{% endif%}
+{% endblock %}

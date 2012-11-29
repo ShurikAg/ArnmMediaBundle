@@ -36,7 +36,7 @@
             </trans-unit>
             <trans-unit id="9">
                 <source>media.form.title.new</source>
-                <target>Upload new media resource</target>
+                <target>Upload New Media Resource</target>
             </trans-unit>
             <trans-unit id="10">
                 <source>media.form.action.upload</source>
@@ -65,6 +65,18 @@
             <trans-unit id="16">
                 <source>media.list.table.head.img_links</source>
                 <target>Resource Links</target>
+            </trans-unit>
+            <trans-unit id="17">
+                <source>media.form.title.edit</source>
+                <target>Edit Media Resource</target>
+            </trans-unit>
+            <trans-unit id="18">
+                <source>media.edit.info</source>
+                <target><![CDATA[<p>Media resource info may be updated as well as the file itself can be updated (but not required).</p>]]></target>
+            </trans-unit>
+            <trans-unit id="19">
+                <source>media.form.action.update</source>
+                <target>Update</target>
             </trans-unit>
         </body>
     </file>

@@ -2,6 +2,7 @@
 namespace Arnm\MediaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Arnm\MediaBundle\Entity\Attribute;
@@ -66,6 +67,22 @@ class Media
      * )
      */
     private $tag;
+
+    /**
+     * @var datetime $created
+     *
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(type="datetime")
+     */
+    private $created;
+
+    /**
+     * @var datetime $updated
+     *
+     * @Gedmo\Timestampable
+     * @ORM\Column(type="datetime")
+     */
+    private $updated;
 
     /**
      * @ORM\OneToMany(targetEntity="Attribute", mappedBy="media")
@@ -201,6 +218,46 @@ class Media
     }
 
     /**
+     * Get datatime of when the record was created
+     *
+     * @return string
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * Explicitely sets the created time
+     *
+     * @param string $created
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+    }
+
+    /**
+     * Gets the datetime of when the recored was updated
+     *
+     * @return string
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
+
+    /**
+     * Explicitely sets the updated time
+     *
+     * @param string $updated
+     */
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
+    }
+
+    /**
      * Add attribute
      *
      * @param Arnm\MediaBundle\Entity\Attribute $attribute
@@ -251,6 +308,9 @@ class Media
     public function preUpload()
     {
         if (null !== $this->media) {
+            //we need to make sure that the old file gets deleted
+            $this->removeUpload();
+
             // do whatever you want to generate a unique name
             $this->file = uniqid() . '.' . $this->media->guessExtension();
 
@@ -282,7 +342,8 @@ class Media
      */
     public function removeUpload()
     {
-        if ($file = $this->getAbsolutePath()) {
+        $file = $this->getAbsolutePath();
+        if (is_file($file)) {
             unlink($file);
         }
     }
@@ -300,7 +361,7 @@ class Media
     protected function getUploadRootDir()
     {
         $webDir = $this->getWebDir();
-        if(empty($webDir)){
+        if (empty($webDir)) {
             throw new \RuntimeException("Web directory is not set!");
         }
         // the absolute directory path where uploaded documents should be saved
