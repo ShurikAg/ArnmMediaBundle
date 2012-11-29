@@ -113,14 +113,4 @@ class MediaController extends ArnmController
 
         return $this->redirect($this->generateUrl('arnm_media'));
     }
-
-    /**
-     * Gets web dir
-     *
-     * @return string
-     */
-    protected function getWebDir()
-    {
-        return $this->get('kernel')->getRootDir() . '/../web/';
-    }
 }
