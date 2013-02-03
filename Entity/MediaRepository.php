@@ -18,7 +18,7 @@ class MediaRepository extends EntityRepository
      */
     public function findAllMediaByTag($slidesTag, $limit = null)
     {
-        $builder = $this->createQueryBuilder('m')
+        $builder = $this->createQueryBuilder('m')->addSelect('a')
             ->leftJoin('m.attributes', 'a')
             ->where('m.tag = :tag')
             ->setParameter('tag', $slidesTag);
