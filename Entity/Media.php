@@ -61,9 +61,9 @@ class Media
      * @ORM\Column(name="tag", type="string", length=255, nullable=true)
      *
      * @Assert\Type(type="string", message="The value {{ value }} is not a valid {{ type }}.")
-     * @Assert\MinLength(
-     * limit=1,
-     * message="Slug must be at least {{ limit }} characters."
+     * @Assert\Length(
+     * min=1,
+     * minMessage="Slug must be at least {{ limit }} characters."
      * )
      */
     private $tag;
