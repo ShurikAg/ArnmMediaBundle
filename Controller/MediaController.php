@@ -18,7 +18,7 @@ class MediaController extends ArnmController
 {
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('ArnmMediaBundle:Media')->findAll();
 
         return $this->render('ArnmMediaBundle:Media:index.html.twig', array(
@@ -40,7 +40,7 @@ class MediaController extends ArnmController
         if ($this->getRequest()->getMethod() === 'POST') {
             $form->bindRequest($this->getRequest());
             if ($form->isValid()) {
-                $em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getManager();
 
                 $em->persist($media);
                 $em->flush();
@@ -63,7 +63,7 @@ class MediaController extends ArnmController
      */
     public function editAction($id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $media = $em->getRepository('ArnmMediaBundle:Media')->findOneById($id);
         $media->setWebDir($this->getWebDir());
         $form = $this->createForm(new MediaType(), $media);
@@ -71,7 +71,7 @@ class MediaController extends ArnmController
         if ($this->getRequest()->getMethod() === 'POST') {
             $form->bindRequest($this->getRequest());
             if ($form->isValid()) {
-                $em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getManager();
 
                 if($media->media instanceof UploadedFile){
                     $media->setUpdated(new \DateTime());
@@ -96,7 +96,7 @@ class MediaController extends ArnmController
      */
     public function deleteAction($id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $media = $em->getRepository('ArnmMediaBundle:Media')->findOneById($id);
 
         if (! $media) {
