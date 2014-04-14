@@ -22,14 +22,14 @@
 	
 	{% if form %}
 		<form action="{{ path('arnm_media_new') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
-			<fieldset>
-				{{ form_widget(form) }}
-				<div class="form-actions">
-			    	<input class="btn btn-primary" type="submit" value="{{ 'media.form.action.upload'|trans({}, 'media') }}"/>
-			    	<input class="btn" type="reset" value="{{ 'default.form.action.reset'|trans }}"/>
-			    	<a  class="btn" href="{{ path('arnm_media') }}">{{ 'default.form.action.back_to_list'|trans }}</a>
-			    </div>
-		    </fieldset>
+			{{ form_widget(form) }}
+			<div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+    		    	<input class="btn btn-primary" type="submit" value="{{ 'media.form.action.upload'|trans({}, 'media') }}"/>
+    		    	<input class="btn" type="reset" value="{{ 'default.form.action.reset'|trans }}"/>
+    		    	<a  class="btn" href="{{ path('arnm_media') }}">{{ 'default.form.action.back_to_list'|trans }}</a>
+    		    </div>
+		    </div>
 		</form>
 	{% endif%}
 {% endblock %}

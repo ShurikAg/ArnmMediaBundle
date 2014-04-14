@@ -15,35 +15,38 @@ class MediaType extends AbstractType
     $builder->add('name', 'text', array(
         'label' => 'media.form.name.label',
         'attr' => array(
-            'rel' => 'tooltip', 
-            'title' => 'media.form.name.help',
-            'class' => 'span4'
-        ), 
+            'data-toggle' => 'popover',
+            'content' => 'media.form.name.help',
+            'translation_domain' => 'media',
+            'class' => 'form-control'
+        ),
         'translation_domain' => 'media',
         'required' => false
     ));
     $builder->add('tag', 'text', array(
         'label' => 'media.form.tag.label',
         'attr' => array(
-            'rel' => 'tooltip', 
-            'title' => 'media.form.tag.help',
-            'class' => 'span4'
-        ), 
+            'data-toggle' => 'popover',
+            'content' => 'media.form.tag.help',
+    		'translation_domain' => 'media',
+            'class' => 'form-control'
+        ),
         'translation_domain' => 'media',
         'required' => false
     ));
     $builder->add('media', 'file', array(
         'label' => 'media.form.media.label',
         'attr' => array(
-            'rel' => 'tooltip', 
-            'title' => 'media.form.media.help',
-            'class' => 'input-file'
-        ), 
+            'data-toggle' => 'popover',
+            'content' => 'media.form.media.help',
+            'translation_domain' => 'media',
+            'class' => ''
+        ),
         'translation_domain' => 'media',
         'required' => false
     ));
   }
-  
+
   /**
    * (non-PHPdoc)
    * @see Symfony\Component\Form.FormTypeInterface::getName()
@@ -52,7 +55,7 @@ class MediaType extends AbstractType
   {
     return 'media';
   }
-  
+
   /**
    * (non-PHPdoc)
    * @see Symfony\Component\Form.AbstractType::getDefaultOptions()

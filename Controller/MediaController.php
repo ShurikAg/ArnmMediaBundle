@@ -38,12 +38,17 @@ class MediaController extends ArnmController
         $form = $this->createForm(new MediaType(), $media);
 
         if ($this->getRequest()->getMethod() === 'POST') {
-            $form->bindRequest($this->getRequest());
+            $form->bind($this->getRequest());
             if ($form->isValid()) {
                 $em = $this->getDoctrine()->getManager();
 
                 $em->persist($media);
                 $em->flush();
+
+                $this->getSession()
+                    ->getFlashBag()
+                    ->add('notice', $this->get('translator')
+                    ->trans('media.message.create.success', array(), 'media'));
 
                 return $this->redirect($this->generateUrl('arnm_media'));
             }
@@ -69,7 +74,7 @@ class MediaController extends ArnmController
         $form = $this->createForm(new MediaType(), $media);
 
         if ($this->getRequest()->getMethod() === 'POST') {
-            $form->bindRequest($this->getRequest());
+            $form->bind($this->getRequest());
             if ($form->isValid()) {
                 $em = $this->getDoctrine()->getManager();
 
@@ -79,6 +84,11 @@ class MediaController extends ArnmController
 
                 $em->persist($media);
                 $em->flush();
+
+                $this->getSession()
+                    ->getFlashBag()
+                    ->add('notice', $this->get('translator')
+                    ->trans('media.message.update.success', array(), 'media'));
 
                 return $this->redirect($this->generateUrl('arnm_media_edit', array('id' => $media->getId())));
             }
@@ -110,6 +120,11 @@ class MediaController extends ArnmController
         }
         $em->remove($media);
         $em->flush();
+
+        $this->getSession()
+            ->getFlashBag()
+            ->add('notice', $this->get('translator')
+            ->trans('media.message.delete.success', array(), 'media'));
 
         return $this->redirect($this->generateUrl('arnm_media'));
     }

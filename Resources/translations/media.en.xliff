@@ -78,6 +78,18 @@
                 <source>media.form.action.update</source>
                 <target>Update</target>
             </trans-unit>
+            <trans-unit id="20">
+                <source>media.message.create.success</source>
+                <target>New media resource has been added successfully!</target>
+            </trans-unit>
+            <trans-unit id="21">
+                <source>media.message.update.success</source>
+                <target>Media resource has been updated successfully!</target>
+            </trans-unit>
+            <trans-unit id="22">
+                <source>media.message.delete.success</source>
+                <target>Media resource has been deleted successfully!</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
