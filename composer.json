@@ -20,6 +20,6 @@
         "doctrine/orm": ">=2.2.3,<2.4-dev",
         "stof/doctrine-extensions-bundle": "dev-master",
         "iibs/arnm-core": "1.0.0",
-        "liip/imagine-bundle": "dev-master"
+        "liip/imagine-bundle": "v0.21.1"
     }
 }
