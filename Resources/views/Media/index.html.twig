@@ -1,7 +1,7 @@
 {% extends 'ArnmAraneumBundle::araneum.html.twig' %}
 
 {% block title %}
-	{{ parent() }} | Media Admin
+	{{ parent() }} | {{ 'media.list.title'|trans({}, 'media') }}
 {% endblock %}
 
 {% block sidebar %}
@@ -10,12 +10,12 @@
   		{{ 'media.info'|trans({}, 'media')|raw }}
 	</div>
 {% endblock %}
- 
+
 {% block content %}
 	<div class="page-header">
 		<h2>{{ 'media.list.title'|trans({}, 'media') }}</h2>
 	</div>
-	
+
 	{% include 'ArnmAraneumBundle:Misc:messages.html.twig' %}
 	<div class="table-responsive">
         <table class="table table-hover">
@@ -55,7 +55,7 @@
     	    </tbody>
     	</table>
 	</div>
-	
+
 	<div class="well">
 	    <a href="{{ path('arnm_media_new') }}" class="btn btn-primary">
 	        {{ 'media.list.action.create_new'|trans({}, 'media') }}

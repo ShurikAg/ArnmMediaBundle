@@ -19,6 +19,7 @@
         "symfony/symfony": "2.5.*",
         "doctrine/orm": ">=2.2.3,<2.4-dev",
         "stof/doctrine-extensions-bundle": "dev-master",
+        "platinumpixs/aws-symfony2-bundle": "1.0.0",
         "iibs/arnm-core": "1.0.1",
         "liip/imagine-bundle": "v0.21.1"
     }
