@@ -32,9 +32,10 @@ class S3Storage implements MediaStorageInterface
      *
      * @param Aws $aws
      */
-    public function __construct(Aws $aws)
+    public function __construct(Aws $aws, $bucket)
     {
         $this->setS3Client($aws->get('S3'));
+        $this->setBucket($bucket);
     }
 
     /**
@@ -70,13 +71,23 @@ class S3Storage implements MediaStorageInterface
      *
      * @see \Arnm\MediaBundle\Service\Storage\MediaStorageInterface::saveObject()
      */
-    public function saveObject($key, $file)
+    public function saveObject($key, $file, $contentType = null, array $metadata = array())
     {
-        $return = $this->getS3Client()->putObject(array(
+        $putData = array(
             'Bucket' => $this->getBucket(),
             'Key' => $key,
-            'SourceFile' => $file
-        ));
+            'SourceFile' => realpath($file)
+        );
+
+        if (!empty($contentType)) {
+            $putData['ContentType'] = $contentType;
+        }
+
+        if (!empty($metadata)) {
+            $putData['Metadata'] = $metadata;
+        }
+
+        $return = $this->getS3Client()->putObject($putData);
 
         // $this->getS3Client()->waitUntil('ObjectExists', array(
         // 'Bucket' => $this->getBucket(),
@@ -101,12 +112,8 @@ class S3Storage implements MediaStorageInterface
     }
 
     /**
-     * Gets object's presigned URL
-     *
-     * @param string $key
-     * @param string $expiration
-     *
-     * @return string
+     * (non-PHPdoc)
+     * @see \Arnm\MediaBundle\Service\Storage\MediaStorageInterface::getObjectUrl()
      */
     public function getObjectUrl($key, $expiration = '+10 minutes')
     {
@@ -116,9 +123,8 @@ class S3Storage implements MediaStorageInterface
     }
 
     /**
-     * Deletes object from the storage
-     *
-     * @param string $key
+     * (non-PHPdoc)
+     * @see \Arnm\MediaBundle\Service\Storage\MediaStorageInterface::deleteObject()
      */
     public function deleteObject($key)
     {

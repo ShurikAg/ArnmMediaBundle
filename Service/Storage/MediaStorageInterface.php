@@ -23,10 +23,12 @@ interface MediaStorageInterface
      *
      * @param string $key
      * @param string $file
+     * @param string $contentType
+     * @param array  $metadata
      *
      * @return Model
      */
-    public function saveObject($key, $file);
+    public function saveObject($key, $file, $contentType = null, array $metadata = array());
 
     /**
      * Saves requested object into a target file
@@ -37,4 +39,21 @@ interface MediaStorageInterface
      * @return Model
      */
     public function getObject($key, $targetFile);
+
+    /**
+     * Gets object's presigned URL
+     *
+     * @param string $key
+     * @param string $expiration
+     *
+     * @return string
+     */
+    public function getObjectUrl($key, $expiration = '+10 minutes');
+
+    /**
+     * Deletes object from the storage
+     *
+     * @param string $key
+     */
+    public function deleteObject($key);
 }

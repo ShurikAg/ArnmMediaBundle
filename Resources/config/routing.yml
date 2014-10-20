@@ -10,6 +10,14 @@ arnm_media_edit:
 arnm_media_delete:
     pattern:  /araneum/media/{id}/delete
     defaults: { _controller: ArnmMediaBundle:Media:delete }
-_imagine:
-    resource: .
-    type:     imagine
+
+
+arnm_media_render:
+    pattern:  /media/image/{width}.{height}.{mode}/{file}
+    defaults: { _controller: ArnmMediaBundle:MediaRender:image }
+    requirements:
+        width: \d+
+        height: \d+
+        mode: ([a-z]+)
+        file: .*
+        _method:  GET

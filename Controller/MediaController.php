@@ -2,13 +2,15 @@
 namespace Arnm\MediaBundle\Controller;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-
 use Arnm\CoreBundle\Controllers\ArnmController;
-
 use Arnm\MediaBundle\Form\MediaType;
 use Symfony\Component\HttpFoundation\Response;
 use Arnm\MediaBundle\Entity\Media;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Arnm\MediaBundle\Service\MediaManager;
+use Symfony\Component\HttpFoundation\Request;
+use Arnm\MediaBundle\FormData\MediaData;
+
 /**
  * Main media controller
  *
@@ -16,6 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
  */
 class MediaController extends ArnmController
 {
+
     public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
@@ -31,16 +34,30 @@ class MediaController extends ArnmController
      *
      * @return Response
      */
-    public function newAction()
+    public function newAction(Request $request)
     {
-        $media = new Media();
-        $media->setWebDir($this->getWebDir());
-        $form = $this->createForm(new MediaType(), $media);
+        $data = new MediaData();
+        $form = $this->createForm(new MediaType(), $data);
 
-        if ($this->getRequest()->getMethod() === 'POST') {
-            $form->bind($this->getRequest());
+        if ($request->getMethod() === 'POST') {
+            $form->bind($request);
             if ($form->isValid()) {
                 $em = $this->getDoctrine()->getManager();
+
+                $targetFile = (string) $data->getFile()->getClientOriginalName();
+
+                //find content type
+                $contentType = $data->getFile()->getClientMimeType();
+                //save file into media storage
+                $mediaMgr = $this->getMediaManager();
+                $mediaMgr->getStorage()->saveObject($targetFile, $data->getFile()->getPathname(), $contentType);
+
+                //create new media object and populate it
+                $media = new Media();
+                $media->setName($data->getName());
+                $media->setTag($data->getTag());
+                $media->setFile($targetFile);
+                $media->setSize($data->getFile()->getClientSize());
 
                 $em->persist($media);
                 $em->flush();
@@ -54,7 +71,7 @@ class MediaController extends ArnmController
             }
         }
         return $this->render('ArnmMediaBundle:Media:new.html.twig', array(
-            'media' => $media,
+            'media' => $data,
             'form' => $form->createView()
         ));
     }
@@ -78,7 +95,7 @@ class MediaController extends ArnmController
             if ($form->isValid()) {
                 $em = $this->getDoctrine()->getManager();
 
-                if($media->media instanceof UploadedFile){
+                if ($media->media instanceof UploadedFile) {
                     $media->setUpdated(new \DateTime());
                 }
 
@@ -90,7 +107,9 @@ class MediaController extends ArnmController
                     ->add('notice', $this->get('translator')
                     ->trans('media.message.update.success', array(), 'media'));
 
-                return $this->redirect($this->generateUrl('arnm_media_edit', array('id' => $media->getId())));
+                return $this->redirect($this->generateUrl('arnm_media_edit', array(
+                    'id' => $media->getId()
+                )));
             }
         }
         return $this->render('ArnmMediaBundle:Media:edit.html.twig', array(
@@ -127,5 +146,15 @@ class MediaController extends ArnmController
             ->trans('media.message.delete.success', array(), 'media'));
 
         return $this->redirect($this->generateUrl('arnm_media'));
+    }
+
+    /**
+     * Gets emdia manager service
+     *
+     * @return MediaManager
+     */
+    protected function getMediaManager()
+    {
+        return $this->get('arnm_media.manager');
     }
 }

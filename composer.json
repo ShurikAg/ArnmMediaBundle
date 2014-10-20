@@ -1,26 +1,28 @@
 {
-    "name": "iibs/arnm-media",
-    "description": "Araneum's media bundle",
-    "version": "1.0.1",
-    "authors": [
-        {
-            "name": "Alex Agulyansky",
-            "email": "alex@iibspro.com",
-            "homepage": "http://www.iibspro.com",
-            "role": "Dev Lead"
-        }
-    ],
-    "autoload": {
-        "psr-0": { "Arnm\\MediaBundle": "" }
-    },
-    "target-dir": "Arnm/MediaBundle",
-    "require": {
-        "php": ">=5.3.3",
-        "symfony/symfony": "2.5.*",
-        "doctrine/orm": ">=2.2.3,<2.4-dev",
-        "stof/doctrine-extensions-bundle": "dev-master",
-        "platinumpixs/aws-symfony2-bundle": "1.0.0",
-        "iibs/arnm-core": "1.0.1",
-        "liip/imagine-bundle": "v0.21.1"
+  "name" : "iibs/arnm-media",
+  "description" : "Araneum's media bundle",
+  "version" : "1.0.1",
+  "require" : {
+    "php" : ">=5.3.3",
+    "symfony/symfony" : "2.5.*",
+    "doctrine/orm" : ">=2.2.3,<2.4-dev",
+    "stof/doctrine-extensions-bundle" : "dev-master",
+    "platinumpixs/aws-symfony2-bundle" : "1.0.0",
+    "doctrine/doctrine-cache-bundle" : "1.0.0",
+    "iibs/arnm-core" : "1.0.1",
+    "imagine/imagine" : "~0.6.1",
+    "liip/imagine-bundle": "~1.0.6"
+  },
+  "target-dir" : "Arnm/MediaBundle",
+  "authors" : [ {
+    "name" : "Alex Agulyansky",
+    "email" : "alex@iibspro.com",
+    "homepage" : "http://www.iibspro.com",
+    "role" : "Dev Lead"
+  } ],
+  "autoload" : {
+    "psr-0" : {
+      "Arnm\\MediaBundle" : ""
     }
+  }
 }

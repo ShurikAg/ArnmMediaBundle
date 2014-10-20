@@ -3,14 +3,12 @@ namespace Arnm\MediaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Arnm\MediaBundle\Entity\Attribute;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * Arnm\MediaBundle\Entity\Media
  *
- * @ORM\Table(name="media")
+ * @ORM\Table(name="media", indexes={@ORM\Index(name="file_idx", columns={"file"})})
  * @ORM\Entity(repositoryClass="Arnm\MediaBundle\Entity\MediaRepository")
  *
  * @ORM\HasLifecycleCallbacks
@@ -30,9 +28,6 @@ class Media
      * @var string $name
      *
      * @ORM\Column(name="name", type="string", length=255)
-     *
-     * @Assert\NotBlank()
-     * @Assert\NotNull()
      */
     private $name;
 
@@ -51,20 +46,9 @@ class Media
     private $size;
 
     /**
-     * @Assert\Image()
-     */
-    public $media;
-
-    /**
      * @var string $tag
      *
      * @ORM\Column(name="tag", type="string", length=255, nullable=true)
-     *
-     * @Assert\Type(type="string", message="The value {{ value }} is not a valid {{ type }}.")
-     * @Assert\Length(
-     * min=1,
-     * minMessage="Slug must be at least {{ limit }} characters."
-     * )
      */
     private $tag;
 
@@ -89,13 +73,6 @@ class Media
      * @ORM\OrderBy({"name" = "ASC"})
      */
     private $attributes;
-
-    /**
-     * Web dir for been able to upload files.
-     *
-     * @var string
-     */
-    private $webDir;
 
     /**
      * Constructor
@@ -298,97 +275,6 @@ class Media
         return null;
     }
 
-    //////////////////////////////////
-    // Methods that dealing with file upload funcitonality
-    //////////////////////////////////
-    /**
-     * @ORM\PrePersist()
-     * @ORM\PreUpdate()
-     */
-    public function preUpload()
-    {
-        if (null !== $this->media) {
-            //we need to make sure that the old file gets deleted
-            $this->removeUpload();
-
-            // do whatever you want to generate a unique name
-            $this->file = uniqid() . '.' . $this->media->guessExtension();
-
-            //set the size
-            $this->setSize($this->media->getSize());
-        }
-    }
-
-    /**
-     * @ORM\PostPersist()
-     * @ORM\PostUpdate()
-     */
-    public function upload()
-    {
-        if (null === $this->media) {
-            return;
-        }
-
-        // if there is an error when moving the file, an exception will
-        // be automatically thrown by move(). This will properly prevent
-        // the entity from being persisted to the database on error
-        $this->media->move($this->getUploadRootDir(), $this->getFile());
-
-        unset($this->media);
-    }
-
-    /**
-     * @ORM\PostRemove()
-     */
-    public function removeUpload()
-    {
-        $file = $this->getAbsolutePath();
-        if (is_file($file)) {
-            unlink($file);
-        }
-    }
-
-    public function getAbsolutePath()
-    {
-        return null === $this->file ? null : $this->getUploadRootDir() . '/' . $this->file;
-    }
-
-    public function getWebPath()
-    {
-        return null === $this->file ? null : $this->getUploadDir() . '/' . $this->file;
-    }
-
-    protected function getUploadRootDir()
-    {
-        $webDir = $this->getWebDir();
-        if (empty($webDir)) {
-            throw new \RuntimeException("Web directory is not set!");
-        }
-        // the absolute directory path where uploaded documents should be saved
-        return $webDir . $this->getUploadDir();
-    }
-
-    protected function getUploadDir()
-    {
-        // get rid of the __DIR__ so it doesn't screw when displaying uploaded doc/image in the view.
-        return 'uploads/images';
-    }
-
-    /**
-     * Gets target url attribute value is one exists
-     *
-     * @return string
-     */
-    public function getTargetUrl()
-    {
-        $urlAttr = $this->getAttributeByName('url');
-        if ($urlAttr instanceof Attribute) {
-            return $urlAttr->getValue();
-        }
-
-        return null;
-    }
-
     /**
      * Gets the value of a caption tag
      *
@@ -423,21 +309,4 @@ class Media
 
         return null;
     }
-
-    /**
-     * @return string
-     */
-    public function getWebDir()
-    {
-        return $this->webDir;
-    }
-
-    /**
-     * @param string $webDir
-     */
-    public function setWebDir($webDir)
-    {
-        $this->webDir = $webDir;
-    }
-
 }

@@ -14,6 +14,11 @@ class S3StorageTest extends \PHPUnit_Framework_TestCase
      */
     private $aws;
 
+    /**
+     * Bucket name for testing
+     *
+     * @var unknown
+     */
     private $bucket = 'indago-test';
     /**
      *
@@ -35,8 +40,7 @@ class S3StorageTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->aws = Aws::factory($config);
-        $this->s3Storage = new S3Storage($this->aws);
-        $this->s3Storage->setBucket($this->bucket);
+        $this->s3Storage = new S3Storage($this->aws, $this->bucket);
     }
 
     /**
