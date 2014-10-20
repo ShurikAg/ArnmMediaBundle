@@ -7,6 +7,7 @@
     <parameters>
         <parameter key="arnm_media.manager.class">Arnm\MediaBundle\Service\MediaManager</parameter>
         <parameter key="arnm_media.storage.class">Arnm\MediaBundle\Service\Storage\S3Storage</parameter>
+        <parameter key="arnm_media.image_transformer.class">Arnm\MediaBundle\Service\Graphics\ImageTransformer</parameter>
     </parameters>
 
     <services>
@@ -18,6 +19,9 @@
         	<argument type="service" id="arnm_media.storage"/>
         	<argument type="service" id="doctrine_cache.providers.media_cache_provider"/>
         	<argument type="service" id="doctrine"/>
+        </service>
+        <service id="arnm_media.image_transformer" class="%arnm_media.image_transformer.class%">
+        	<argument type="service" id="liip_imagine.filter.loader.thumbnail"/>
         </service>
     </services>
 </container>

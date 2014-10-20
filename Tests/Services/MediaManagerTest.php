@@ -15,7 +15,9 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
 	{
 	    $storage = $this->getMock('Arnm\MediaBundle\Service\Storage\S3Storage', array('stub'), array(), '', false);
 	    $cacheProvider = $this->getMock('Doctrine\Common\Cache\MemcacheCache', array('stub'), array(), '', false);
-		$mgr = new MediaManager($storage, $cacheProvider);
+		$doctrine = $this->getMock('Doctrine\Bundle\DoctrineBundle\Registry', array('stub'), array(), '', false);
+
+	    $mgr = new MediaManager($storage, $cacheProvider, $doctrine);
 
 		$this->assertTrue($mgr instanceof MediaManager);
 	}
@@ -46,7 +48,9 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         	    ->with($this->equalTo('key'), $this->equalTo('http://domain.com/object/key'), $this->equalTo(MediaManager::SIGNED_URL_EXPIRATION-MediaManager::SIGNED_URL_EXPIRATION_THRESHOLD))
         	    ->will($this->returnValue(false));
 
-	    $mgr = new MediaManager($storage, $cacheProvider);
+	    $doctrine = $this->getMock('Doctrine\Bundle\DoctrineBundle\Registry', array('stub'), array(), '', false);
+
+	    $mgr = new MediaManager($storage, $cacheProvider, $doctrine);
 	    $mgr->getObjectPublicUrl('key');
 	}
 }

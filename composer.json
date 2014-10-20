@@ -1,7 +1,7 @@
 {
   "name" : "iibs/arnm-media",
   "description" : "Araneum's media bundle",
-  "version" : "1.0.1",
+  "version" : "1.0.2",
   "require" : {
     "php" : ">=5.3.3",
     "symfony/symfony" : "2.5.*",
@@ -11,7 +11,7 @@
     "doctrine/doctrine-cache-bundle" : "1.0.0",
     "iibs/arnm-core" : "1.0.1",
     "imagine/imagine" : "~0.6.1",
-    "liip/imagine-bundle": "~1.0.6"
+    "liip/imagine-bundle" : "~1.0.6"
   },
   "target-dir" : "Arnm/MediaBundle",
   "authors" : [ {

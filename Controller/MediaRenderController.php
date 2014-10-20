@@ -20,24 +20,13 @@ class MediaRenderController extends ArnmController
     /**
      * Redirects to the correct URL for requested resource
      *
-     * @param string $width
-     * @param string $height
-     * @param string $mode
+     * @param string $size
      * @param string $file
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function imageAction($width, $height, $mode, $file)
+    public function imageAction($size, $file)
     {
-        // do some validations firsts
-        if (! in_array($mode, array(
-                                    ImageInterface::THUMBNAIL_OUTBOUND,
-                                    ImageInterface::THUMBNAIL_INSET,
-                                    self::FILTER_ORIGINAL
-                                ))) {
-            throw $this->createNotFoundException('Invalid filter!');
-        }
-
         //find media by file name
         $media = $this->getMediaManager()->findMediaByFile($file);
 
@@ -47,7 +36,7 @@ class MediaRenderController extends ArnmController
 
         //build the full file name structure
         $filePath = $file;
-        if ($mode != self::FILTER_ORIGINAL) {
+        if ($size != self::FILTER_ORIGINAL) {
             $filePath = 'cache/'.str_replace(array('.', '/'), array('_','_'), $file).'/'.$width.'_'.$height.'_'.$mode.'/'.$file;
         }
 
@@ -58,7 +47,7 @@ class MediaRenderController extends ArnmController
         } catch (\InvalidArgumentException $e){
             //if it is the original image then something is wrong
             //since we have the record but not the resource that we can sign
-            if($mode == self::FILTER_ORIGINAL) {
+            if($size == self::FILTER_ORIGINAL) {
                 throw $this->createNotFoundException("Media source was not found!");
             }
         }
