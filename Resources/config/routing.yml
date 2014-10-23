@@ -13,9 +13,9 @@ arnm_media_delete:
 
 
 arnm_media_render:
-    pattern:  /media/image/size/{file}
+    pattern:  /media/image/{size}/{file}
     defaults: { _controller: ArnmMediaBundle:MediaRender:image }
     requirements:
-        mode: original|[0-9.]+
+        size: original|\d+.\d+
         file: .*
         _method:  GET

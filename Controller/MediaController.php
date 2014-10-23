@@ -6,10 +6,9 @@ use Arnm\CoreBundle\Controllers\ArnmController;
 use Arnm\MediaBundle\Form\MediaType;
 use Symfony\Component\HttpFoundation\Response;
 use Arnm\MediaBundle\Entity\Media;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Arnm\MediaBundle\Service\MediaManager;
 use Symfony\Component\HttpFoundation\Request;
-use Arnm\MediaBundle\FormData\MediaData;
+use Arnm\MediaBundle\Model\MediaModel;
 
 /**
  * Main media controller
@@ -36,31 +35,15 @@ class MediaController extends ArnmController
      */
     public function newAction(Request $request)
     {
-        $data = new MediaData();
+        $data = new MediaModel();
         $form = $this->createForm(new MediaType(), $data);
 
         if ($request->getMethod() === 'POST') {
             $form->bind($request);
             if ($form->isValid()) {
-                $em = $this->getDoctrine()->getManager();
-
-                $targetFile = (string) $data->getFile()->getClientOriginalName();
-
-                //find content type
-                $contentType = $data->getFile()->getClientMimeType();
-                //save file into media storage
                 $mediaMgr = $this->getMediaManager();
-                $mediaMgr->getStorage()->saveObject($targetFile, $data->getFile()->getPathname(), $contentType);
 
-                //create new media object and populate it
-                $media = new Media();
-                $media->setName($data->getName());
-                $media->setTag($data->getTag());
-                $media->setFile($targetFile);
-                $media->setSize($data->getFile()->getClientSize());
-
-                $em->persist($media);
-                $em->flush();
+                $media = $mediaMgr->createMedia($data);
 
                 $this->getSession()
                     ->getFlashBag()
@@ -86,21 +69,21 @@ class MediaController extends ArnmController
     public function editAction($id)
     {
         $em = $this->getDoctrine()->getManager();
-        $media = $em->getRepository('ArnmMediaBundle:Media')->findOneById($id);
-        $media->setWebDir($this->getWebDir());
-        $form = $this->createForm(new MediaType(), $media);
+
+        $data = $this->getMediaManager()->createMediaModelForMediaId($id);
+
+        if (!($data instanceof MediaModel)) {
+            throw $this->createNotFoundException("Could not find media object!");
+        }
+
+        $form = $this->createForm(new MediaType(), $data);
 
         if ($this->getRequest()->getMethod() === 'POST') {
             $form->bind($this->getRequest());
             if ($form->isValid()) {
-                $em = $this->getDoctrine()->getManager();
+                $media = $em->getRepository('ArnmMediaBundle:Media')->findOneById($id);
 
-                if ($media->media instanceof UploadedFile) {
-                    $media->setUpdated(new \DateTime());
-                }
-
-                $em->persist($media);
-                $em->flush();
+                $this->getMediaManager()->updateMedia($media, $data);
 
                 $this->getSession()
                     ->getFlashBag()
@@ -113,7 +96,7 @@ class MediaController extends ArnmController
             }
         }
         return $this->render('ArnmMediaBundle:Media:edit.html.twig', array(
-            'media' => $media,
+            'media' => $data,
             'form' => $form->createView()
         ));
     }
@@ -132,13 +115,7 @@ class MediaController extends ArnmController
             throw $this->createNotFoundException('Unable to find Media entity.');
         }
 
-        $media->setWebDir($this->getWebDir());
-
-        foreach ($media->getAttributes() as $attribtue) {
-            $em->remove($attribtue);
-        }
-        $em->remove($media);
-        $em->flush();
+        $this->getMediaManager()->deleteMedia($media);
 
         $this->getSession()
             ->getFlashBag()

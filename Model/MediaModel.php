@@ -1,14 +1,15 @@
 <?php
-namespace Arnm\MediaBundle\FormData;
+namespace Arnm\MediaBundle\Model;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 /**
  * This class is responsible for media form data
  *
+ *
  * @author Alex Agulyansky <alex@iibspro.com>
  */
-class MediaData
+class MediaModel
 {
 
     /**
@@ -40,6 +41,11 @@ class MediaData
     private $tag;
 
     /**
+     * This property represents uploaded file.
+     *
+     * In general when the object is built based on the existing media record,
+     * the assumption that this field is empty and filled in only on form submission.
+     *
      * @var string
      *
      * @Assert\Image()
@@ -125,7 +131,4 @@ class MediaData
     {
         $this->file = $file;
     }
-
-
-
 }

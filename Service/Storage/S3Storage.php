@@ -133,6 +133,9 @@ class S3Storage implements MediaStorageInterface
             'Key' => ((string) $key)
         ));
 
+        //now also delete all the cached data related to this object
+        $deletedCount = $this->getS3Client()->deleteMatchingObjects($this->getBucket(), 'cache/' . str_replace(array('.', '/'), array('_', '_'), $key) . '/');
+
         return $response;
     }
 

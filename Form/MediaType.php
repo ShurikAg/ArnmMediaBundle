@@ -66,7 +66,7 @@ class MediaType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Arnm\MediaBundle\FormData\MediaData',
+            'data_class' => 'Arnm\MediaBundle\Model\MediaModel',
         ));
     }
 }

@@ -25,7 +25,6 @@
     	            <th>{{ 'media.list.table.head.name'|trans({}, 'media') }}</th>
     	            <th>{{ 'media.list.table.head.tag'|trans({}, 'media') }}</th>
     	            <th>{{ 'media.list.table.head.preview'|trans({}, 'media') }}</th>
-    	            <th>{{ 'media.list.table.head.img_links'|trans({}, 'media') }}</th>
     	            <th>{{ 'default.label.actions'|trans }}</th>
     	        </tr>
     	    </thead>
@@ -36,15 +35,7 @@
     	            <td>{{ entity.name }}</td>
     	            <td>{{ entity.tag }}</td>
     	            <td>
-    	            	<img src="{{ entity.getWebPath | imagine_filter('araneum_preview') }}" />
-    	            </td>
-    	            <td>
-            			<a target="_blank" href="{{ entity.getWebPath | imagine_filter('araneum_preview') }}">araneum_preview</a><br/>
-            			<a target="_blank" href="{{ entity.getWebPath | imagine_filter('rotator') }}">rotator</a><br/>
-            			<a target="_blank" href="{{ entity.getWebPath | imagine_filter('filmstrip') }}">filmstrip</a><br/>
-            			<a target="_blank" href="{{ entity.getWebPath | imagine_filter('showcase_thumb') }}">showcase_thumb</a><br/>
-            			<a target="_blank" href="{{ entity.getWebPath | imagine_filter('artist_image') }}">artist_image</a>
-            			<br/>
+    	            	<img src="{{ path('arnm_media_render', { 'size': '150.150', 'file': entity.file }) }}" />
     	            </td>
     	            <td>
     	            	<a href="{{ path('arnm_media_edit', { 'id': entity.id }) }}" class="btn btn-default">{{ 'default.label.edit'|trans }}</a>

@@ -6,6 +6,7 @@
     "php" : ">=5.3.3",
     "symfony/symfony" : "2.5.*",
     "doctrine/orm" : ">=2.2.3,<2.4-dev",
+    "doctrine/doctrine-bundle": "~1.2",
     "stof/doctrine-extensions-bundle" : "dev-master",
     "platinumpixs/aws-symfony2-bundle" : "1.0.0",
     "doctrine/doctrine-cache-bundle" : "1.0.0",
