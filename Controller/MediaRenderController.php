@@ -72,8 +72,8 @@ class MediaRenderController extends ArnmController
         if (empty($signedUrl)) {
             // we probably still didn't create the cache for this size
             // let's resize first
-            $tmpFile = sys_get_temp_dir() . '/' . $file;
-            $extention = pathinfo($tmpFile, PATHINFO_EXTENSION);
+            $tmpFile = sys_get_temp_dir() . '/' . str_replace('/', '_', $file);
+            $extention = pathinfo($file, PATHINFO_EXTENSION);
             $this->getMediaManager()
                 ->getStorage()
                 ->getObject($file, $tmpFile);

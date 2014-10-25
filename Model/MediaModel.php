@@ -52,6 +52,13 @@ class MediaModel
      */
     private $file;
 
+    /**
+     * Namespace for inernal use
+     *
+     * @var string
+     */
+    private $namespace = null;
+
 	/**
 	 * Gets the ID
 	 *
@@ -130,5 +137,25 @@ class MediaModel
     public function setFile(UploadedFile $file)
     {
         $this->file = $file;
+    }
+
+	/**
+	 * Gets namspace value
+	 *
+     * @return string
+     */
+    public function getNamespace()
+    {
+        return $this->namespace;
+    }
+
+	/**
+	 * Sets namespace value
+	 *
+     * @param string $namespace
+     */
+    public function setNamespace($namespace)
+    {
+        $this->namespace = (string) $namespace;
     }
 }
