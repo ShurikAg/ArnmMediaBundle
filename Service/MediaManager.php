@@ -91,6 +91,10 @@ class MediaManager
     {
         $em = $this->getEntityManager();
 
+        if (!($mediaData->getFile() instanceof UploadedFile)) {
+            return null;
+        }
+
         $targetFile = (string) $mediaData->getFile()->getClientOriginalName();
 
         // check the namespace
@@ -166,6 +170,7 @@ class MediaManager
 
             // save the new one
             $targetFile = (string) $mediaData->getFile()->getClientOriginalName();
+            $targetFile = $namespace . ((substr($namespace, - 1) == '/') ? '' : '/') . $targetFile;
 
             // find content type
             $contentType = $mediaData->getFile()->getClientMimeType();
