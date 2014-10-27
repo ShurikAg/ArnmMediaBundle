@@ -170,7 +170,10 @@ class MediaManager
 
             // save the new one
             $targetFile = (string) $mediaData->getFile()->getClientOriginalName();
-            $targetFile = $namespace . ((substr($namespace, - 1) == '/') ? '' : '/') . $targetFile;
+            $namespace = $mediaData->getNamespace();
+            if (! empty($namespace)) {
+                $targetFile = $namespace . ((substr($namespace, - 1) == '/') ? '' : '/') . $targetFile;
+            }
 
             // find content type
             $contentType = $mediaData->getFile()->getClientMimeType();
