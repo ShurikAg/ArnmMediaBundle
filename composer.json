@@ -1,7 +1,7 @@
 {
   "name" : "iibs/arnm-media",
   "description" : "Araneum's media bundle",
-  "version" : "1.0.2",
+  "version" : "1.0.3",
   "require" : {
     "php" : ">=5.3.3",
     "symfony/symfony" : "2.5.*",
