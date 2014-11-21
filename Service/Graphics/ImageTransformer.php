@@ -36,11 +36,11 @@ class ImageTransformer
      *
      * @return ImageInterface
      */
-    public function createThumbnail(ImageInterface $image, array $size)
+    public function createThumbnail(ImageInterface $image, array $size, $mode = ImageInterface::THUMBNAIL_INSET)
     {
         $options = array(
             'size' => $size,
-            'mode' => ImageInterface::THUMBNAIL_INSET
+            'mode' => $mode
         );
 
         return $this->getThumbnailFilterLoader()->load($image, $options);

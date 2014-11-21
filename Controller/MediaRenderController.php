@@ -39,8 +39,20 @@ class MediaRenderController extends ArnmController
         $filePath = $file;
         $width = null;
         $height = null;
+        $mode = ImageInterface::THUMBNAIL_INSET;
         if ($size != self::SIZE_ORIGINAL) {
-            list ($width, $height) = explode('.', $size);
+            $sizeArray = explode('.', $size);
+            if (count($sizeArray) == 1) {
+                $width = $size;
+            } elseif (count($sizeArray) == 2) {
+                $width = $sizeArray[0];
+                $height = $sizeArray[1];
+            } elseif (count($sizeArray) == 3) {
+                $width = $sizeArray[0];
+                $height = $sizeArray[1];
+                $mode = $sizeArray[2];
+            }
+
             if (empty($width)) {
                 $width = null;
             }
@@ -48,13 +60,7 @@ class MediaRenderController extends ArnmController
                 $height = null;
             }
 
-            $filePath = 'cache/' . str_replace(array(
-                '.',
-                '/'
-            ), array(
-                '_',
-                '_'
-            ), $file) . '/' . ((empty($width)) ? 'null' : $width) . '_' . ((empty($height)) ? 'null' : $height) . '/' . $file;
+            $filePath = 'cache/' . str_replace(array('.','/'), array('_','_'), $file) . '/' . ((empty($width)) ? 'null' : $width) . '_' . ((empty($height)) ? 'null' : $height) . '_' . $mode . '/' . $file;
         }
 
         $signedUrl = null;
@@ -84,7 +90,7 @@ class MediaRenderController extends ArnmController
             $imageTransformer = $this->get('arnm_media.image_transformer');
             // create new temp file for resied image
             $resizedFile = tempnam(sys_get_temp_dir(), 'tumb') . '.' . $extention;
-            $resizedImage = $imageTransformer->createThumbnail($originalImage, array($width, $height));
+            $resizedImage = $imageTransformer->createThumbnail($originalImage, array($width, $height), $mode);
 
             $resizedImage->save($resizedFile);
 

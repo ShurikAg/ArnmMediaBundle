@@ -16,6 +16,6 @@ arnm_media_render:
     pattern:  /media/image/{size}/{file}
     defaults: { _controller: ArnmMediaBundle:MediaRender:image }
     requirements:
-        size: original|\d+.\d+
+        size: original|\d+.\d+|\d+.\d+.inset|\d+.\d+.outbound
         file: .*
         _method:  GET
