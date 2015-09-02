@@ -23,6 +23,7 @@ class MediaTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
+
         $this->media = new Media();
     }
 
@@ -32,6 +33,7 @@ class MediaTest extends \PHPUnit_Framework_TestCase
     protected function tearDown()
     {
         $this->media = null;
+
         parent::tearDown();
     }
 
@@ -76,14 +78,6 @@ class MediaTest extends \PHPUnit_Framework_TestCase
     {
         $this->media->setSize(987987);
         $this->assertEquals(987987, $this->media->getSize());
-    }
-
-    /**
-     * Tests Media->getMedia()
-     */
-    public function testSetGetMedia()
-    {
-        $this->assertNull($this->media->getMedia());
     }
 
     /**

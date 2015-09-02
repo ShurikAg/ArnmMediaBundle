@@ -1,15 +1,15 @@
 {
   "name" : "iibs/arnm-media",
   "description" : "Araneum's media bundle",
-  "version" : "1.0.3",
+  "version" : "1.0.4",
   "require" : {
-    "php" : ">=5.3.3",
-    "symfony/symfony" : "2.5.*",
-    "doctrine/orm" : ">=2.2.3,<2.4-dev",
-    "doctrine/doctrine-bundle": "~1.2",
-    "stof/doctrine-extensions-bundle" : "dev-master",
-    "platinumpixs/aws-symfony2-bundle" : "1.0.0",
-    "doctrine/doctrine-cache-bundle" : "1.0.0",
+    "php": ">=5.3.9",
+    "symfony/symfony": "2.7.*",
+    "doctrine/orm": "~2.2,>=2.2.3,<2.5",
+    "doctrine/doctrine-bundle": "~1.4",
+    "stof/doctrine-extensions-bundle": "dev-master",
+    "platinumpixs/aws-symfony2-bundle": "1.2.*",
+    "doctrine/doctrine-cache-bundle": "~1.0",
     "iibs/arnm-core" : "1.0.*",
     "imagine/imagine" : "~0.6.1",
     "liip/imagine-bundle" : "~1.0.6"
