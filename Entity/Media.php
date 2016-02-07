@@ -3,6 +3,9 @@ namespace Arnm\MediaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Gedmo\Blameable\Traits\BlameableEntity;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Arnm\MediaBundle\Entity\Attribute;
 /**
@@ -10,11 +13,16 @@ use Arnm\MediaBundle\Entity\Attribute;
  *
  * @ORM\Table(name="media", indexes={@ORM\Index(name="file_idx", columns={"file"})})
  * @ORM\Entity(repositoryClass="Arnm\MediaBundle\Entity\MediaRepository")
- *
- * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
+ * @Gedmo\Loggable
  */
 class Media
 {
+
+    use SoftDeleteableEntity;
+    use TimestampableEntity;
+    use BlameableEntity;
+
     /**
      * @var integer $id
      *
@@ -28,6 +36,7 @@ class Media
      * @var string $name
      *
      * @ORM\Column(name="name", type="string", length=255)
+     * @Gedmo\Versioned
      */
     private $name;
 
@@ -35,6 +44,7 @@ class Media
      * @var string $file
      *
      * @ORM\Column(name="file", type="string", length=255)
+     * @Gedmo\Versioned
      */
     private $file;
 
@@ -42,6 +52,7 @@ class Media
      * @var integer $size
      *
      * @ORM\Column(name="size", type="integer")
+     * @Gedmo\Versioned
      */
     private $size;
 
@@ -49,24 +60,9 @@ class Media
      * @var string $tag
      *
      * @ORM\Column(name="tag", type="string", length=255, nullable=true)
+     * @Gedmo\Versioned
      */
     private $tag;
-
-    /**
-     * @var datetime $created
-     *
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(type="datetime")
-     */
-    private $created;
-
-    /**
-     * @var datetime $updated
-     *
-     * @Gedmo\Timestampable
-     * @ORM\Column(type="datetime")
-     */
-    private $updated;
 
     /**
      * @ORM\OneToMany(targetEntity="Attribute", mappedBy="media")
@@ -192,46 +188,6 @@ class Media
     public function getTag()
     {
         return $this->tag;
-    }
-
-    /**
-     * Get datatime of when the record was created
-     *
-     * @return string
-     */
-    public function getCreated()
-    {
-        return $this->created;
-    }
-
-    /**
-     * Explicitely sets the created time
-     *
-     * @param string $created
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-    }
-
-    /**
-     * Gets the datetime of when the recored was updated
-     *
-     * @return string
-     */
-    public function getUpdated()
-    {
-        return $this->updated;
-    }
-
-    /**
-     * Explicitely sets the updated time
-     *
-     * @param string $updated
-     */
-    public function setUpdated($updated)
-    {
-        $this->updated = $updated;
     }
 
     /**
