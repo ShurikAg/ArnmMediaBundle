@@ -6,6 +6,7 @@ use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Arnm\MediaBundle\Model\MediaModel;
 use Arnm\MediaBundle\Entity\Media;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -85,6 +86,8 @@ class MediaManager
      *
      * @param MediaModel $mediaData
      *
+     * @throws \Exception
+     *
      * @return Media
      */
     public function createMedia(MediaModel $mediaData)
@@ -95,30 +98,42 @@ class MediaManager
             return null;
         }
 
-        $targetFile = (string) $mediaData->getFile()->getClientOriginalName();
+        $targetFile = sha1(uniqid()) . "." . $mediaData->getFile()->getClientOriginalExtension();
 
         // check the namespace
         $namespace = $mediaData->getNamespace();
-        if (! empty($namespace)) {
-            $targetFile = $namespace . ((substr($namespace, - 1) == '/') ? '' : '/') . $targetFile;
+        if (!empty($namespace)) {
+            $targetFile = $namespace . ((substr($namespace, -1) == '/') ? '' : '/') . $targetFile;
         }
 
-        // find content type
-        $contentType = $mediaData->getFile()->getClientMimeType();
-        // save file into media storage
-        $this->getStorage()->saveObject($targetFile, $mediaData->getFile()
-            ->getPathname(), $contentType);
+        $em->getConnection()->beginTransaction();
 
-        // create new media object and populate it
-        $media = new Media();
-        $media->setName($mediaData->getName());
-        $media->setTag($mediaData->getTag());
-        $media->setFile($targetFile);
-        $media->setSize($mediaData->getFile()
-            ->getClientSize());
+        try {
+            // find content type
+            $contentType = $mediaData->getFile()->getClientMimeType();
+            // save file into media storage
+            $this->getStorage()->saveObject($targetFile, $mediaData->getFile()
+                ->getPathname(), $contentType);
 
-        $em->persist($media);
-        $em->flush();
+            // create new media object and populate it
+            $media = new Media();
+            $media->setName($mediaData->getName());
+            $media->setTag($mediaData->getTag());
+            $media->setFile($targetFile);
+            $media->setSize($mediaData->getFile()
+                ->getClientSize());
+
+            $em->persist($media);
+            $em->flush();
+
+            $em->getConnection()->commit();
+        } catch (\Exception $e) {
+            $em->getConnection()->rollBack();
+            //try to delete the file from S3 if already uploaded
+            $this->getStorage()->deleteObject($targetFile);
+
+            throw $e;
+        }
 
         return $media;
     }
@@ -156,45 +171,61 @@ class MediaManager
      * @param Media $media
      * @param MediaModel $mediaData
      *
+     * @throws \Exception
+     *
      * @return Media
      */
     public function updateMedia(Media $media, MediaModel $mediaData)
     {
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->getEntityManager();
 
-        $targetFile = null;
-        // do we need to update the actual file in storage
-        if ($mediaData->getFile() instanceof UploadedFile) {
-            // delete the old source
-            $this->getStorage()->deleteObject($media->getFile());
+        $em->getConnection()->beginTransaction();
 
-            // save the new one
-            $targetFile = (string) $mediaData->getFile()->getClientOriginalName();
-            $namespace = $mediaData->getNamespace();
-            if (! empty($namespace)) {
-                $targetFile = $namespace . ((substr($namespace, - 1) == '/') ? '' : '/') . $targetFile;
+        try {
+            $targetFile = null;
+            // do we need to update the actual file in storage
+            if ($mediaData->getFile() instanceof UploadedFile) {
+
+                $oldFile = $media->getFile();
+
+                // save the new one
+                $targetFile = sha1(uniqid()) . "." . $mediaData->getFile()->getClientOriginalExtension();
+                $namespace = $mediaData->getNamespace();
+                if (!empty($namespace)) {
+                    $targetFile = $namespace . ((substr($namespace, -1) == '/') ? '' : '/') . $targetFile;
+                }
+
+                // find content type
+                $contentType = $mediaData->getFile()->getClientMimeType();
+                // save file into media storage
+                $this->getStorage()->saveObject($targetFile, $mediaData->getFile()
+                    ->getPathname(), $contentType);
+
+                // delete the old source
+                $this->getStorage()->deleteObject($oldFile);
             }
 
-            // find content type
-            $contentType = $mediaData->getFile()->getClientMimeType();
-            // save file into media storage
-            $this->getStorage()->saveObject($targetFile, $mediaData->getFile()
-                ->getPathname(), $contentType);
-        }
+            // now update the record
+            $media->setName($mediaData->getName());
+            $media->setTag($mediaData->getTag());
+            if (!is_null($targetFile)) {
+                // if the file been uploaded
+                // update it's details too
+                $media->setFile($targetFile);
+                $media->setSize($mediaData->getFile()
+                    ->getClientSize());
+            }
 
-        // now update the record
-        $media->setName($mediaData->getName());
-        $media->setTag($mediaData->getTag());
-        if (! is_null($targetFile)) {
-            // if the file been uploaded
-            // update it's details too
-            $media->setFile($targetFile);
-            $media->setSize($mediaData->getFile()
-                ->getClientSize());
-        }
+            $em->persist($media);
+            $em->flush();
 
-        $em->persist($media);
-        $em->flush();
+            $em->getConnection()->commit();
+
+        } catch (\Exception $e) {
+            $em->getConnection()->rollBack();
+
+            throw $e;
+        }
 
         return $media;
     }
@@ -287,13 +318,16 @@ class MediaManager
     /**
      * Sets Registry instance
      *
-     * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine
+     * @param Registry $doctrine
      */
     public function setDoctrine(Registry $doctrine)
     {
         $this->doctrine = $doctrine;
     }
 
+    /**
+     * @return EntityManager
+     */
     protected function getEntityManager()
     {
         return $this->getDoctrine()->getManager();
