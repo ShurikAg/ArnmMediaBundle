@@ -19,3 +19,10 @@ arnm_media_render:
         size: original|\d+.\d+|\d+.\d+.inset|\d+.\d+.outbound
         file: .*
         _method:  GET
+
+arnm_media_file:
+    pattern:  /media/{file}
+    defaults: { _controller: ArnmMediaBundle:MediaRender:file }
+    requirements:
+        file: .*
+        _method:  GET

@@ -1,7 +1,8 @@
 {
   "name" : "iibs/arnm-media",
+  "license": "MIT",
   "description" : "Araneum's media bundle",
-  "version" : "1.0.6",
+  "version" : "1.0.7",
   "require" : {
     "php": ">=5.3.9",
     "symfony/symfony": "2.7.*",

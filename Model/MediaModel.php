@@ -47,8 +47,6 @@ class MediaModel
      * the assumption that this field is empty and filled in only on form submission.
      *
      * @var string
-     *
-     * @Assert\Image()
      */
     private $file;
 

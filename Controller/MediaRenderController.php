@@ -7,6 +7,7 @@ use Arnm\MediaBundle\Service\MediaManager;
 use Arnm\MediaBundle\Entity\Media;
 use Imagine\Gd\Imagine;
 use Imagine\Image\ImageInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * This controller is responsible for rendering (redirecting to) media resource
@@ -103,6 +104,34 @@ class MediaRenderController extends ArnmController
         }
 
         return $this->redirect($signedUrl);
+    }
+
+    /**
+     * Gets the file direct download link
+     *
+     * @param $file
+     *
+     * @return Response
+     */
+    public function fileAction($file)
+    {
+        $media = $this->getMediaManager()->findMediaByFile($file);
+
+        if (! ($media instanceof Media)) {
+            throw $this->createNotFoundException('Media resource not found!');
+        }
+
+        try {
+            // get signed url
+            $signedUrl = $this->getMediaManager()->getObjectPublicUrl($file);
+
+            return $this->redirect($signedUrl);
+
+        } catch (\InvalidArgumentException $e) {
+            // if it is the original image then something is wrong
+            // since we have the record but not the resource that we can sign
+            throw $this->createNotFoundException("Media source was not found!");
+        }
     }
 
     /**
