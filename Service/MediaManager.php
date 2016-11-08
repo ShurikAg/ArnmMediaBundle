@@ -17,9 +17,9 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class MediaManager
 {
 
-    const SIGNED_URL_EXPIRATION = '600';
+    const SIGNED_URL_EXPIRATION = 600;
 
-    const SIGNED_URL_EXPIRATION_THRESHOLD = '10';
+    const SIGNED_URL_EXPIRATION_THRESHOLD = 10;
 
     /**
      * Media storage object instance
@@ -62,9 +62,11 @@ class MediaManager
      */
     public function getObjectPublicUrl($key)
     {
+        $cacheKey = md5($key);
+
         // getck if we already have a url for this key stored in cache
-        if ($this->getCache()->contains($key)) {
-            return $this->getCache()->fetch($key);
+        if ($this->getCache()->contains($cacheKey)) {
+            return $this->getCache()->fetch($cacheKey);
         }
 
         // check if the object even exists
@@ -76,7 +78,7 @@ class MediaManager
         $signedUrl = $this->getStorage()->getObjectUrl($key, '+' . self::SIGNED_URL_EXPIRATION . ' seconds');
 
         // save it into a cache
-        $this->getCache()->save($key, $signedUrl, (self::SIGNED_URL_EXPIRATION - self::SIGNED_URL_EXPIRATION_THRESHOLD));
+        $this->getCache()->save($cacheKey, $signedUrl, (self::SIGNED_URL_EXPIRATION - self::SIGNED_URL_EXPIRATION_THRESHOLD));
 
         return $signedUrl;
     }
